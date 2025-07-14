@@ -11,4 +11,15 @@ window.onload = function () {
     context = board.getContext("2d");
     context.fillStyle = "green";
     context.fillRect(0, 0, board.width, board.height);
+    foodCreator();
+
+}
+
+function foodCreator() {
+   const foodX = Math.floor(Math.random() * total_col) * blockSize;
+
+    const foodY = Math.floor(Math.random() * total_row) * blockSize;
+
+    context.fillStyle = "white";
+    context.fillRect(foodX, foodY, blockSize, blockSize);
 }
