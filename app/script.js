@@ -9,6 +9,7 @@ let foodX;
 let foodY;
 let snakeX = blockSize * 5;
 let snakeY = blockSize * 5;
+let snakeBody = [];
 
 window.onload = function () {
     board = document.getElementById("board");
@@ -21,7 +22,7 @@ window.onload = function () {
     context.fillStyle = "yellow";
     context.fillRect(foodX, foodY, blockSize, blockSize);
     document.addEventListener("keyup", changeDirection);
-    setInterval(update, 100);
+    setInterval(update, 500);
 }
 
 function placeFood() {
@@ -42,6 +43,22 @@ function update() {
 
     snakeX += speedX * blockSize;
     snakeY += speedY * blockSize;
+
+    if (snakeX === foodX && snakeY === foodY) {
+        snakeBody.push([foodX, foodY]);
+        placeFood();
+    }
+
+    for (let i = snakeBody.length - 1; i > 0; i--) {
+        snakeBody[i] = snakeBody[i - 1];
+    }
+    if (snakeBody.length) {
+        snakeBody[0] = [snakeX, snakeY];
+    }
+
+    for (let i = 0; i < snakeBody.length; i++) {
+        context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+    }
 }
 
 function changeDirection(e) {
