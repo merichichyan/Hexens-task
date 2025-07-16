@@ -10,19 +10,16 @@ let foodY;
 let snakeX = blockSize * 5;
 let snakeY = blockSize * 5;
 let snakeBody = [];
+let gameOver = false;
 
 window.onload = function () {
     board = document.getElementById("board");
     board.height = total_row * blockSize;
     board.width = total_col * blockSize;
     context = board.getContext("2d");
-    context.fillStyle = "green";
-    context.fillRect(0, 0, board.width, board.height);
     placeFood();
-    context.fillStyle = "yellow";
-    context.fillRect(foodX, foodY, blockSize, blockSize);
     document.addEventListener("keyup", changeDirection);
-    setInterval(update, 500);
+    setInterval(update, 200);
 }
 
 function placeFood() {
@@ -32,17 +29,16 @@ function placeFood() {
 }
 
 function update() {
+    if (gameOver) {
+        return;
+    }
+
     context.fillStyle = "green";
     context.fillRect(0, 0, board.width, board.height);
 
+
     context.fillStyle = "yellow";
     context.fillRect(foodX, foodY, blockSize, blockSize);
-
-    context.fillStyle = "white";
-    context.fillRect(snakeX, snakeY, blockSize, blockSize);
-
-    snakeX += speedX * blockSize;
-    snakeY += speedY * blockSize;
 
     if (snakeX === foodX && snakeY === foodY) {
         snakeBody.push([foodX, foodY]);
@@ -56,8 +52,28 @@ function update() {
         snakeBody[0] = [snakeX, snakeY];
     }
 
+    context.fillStyle = "white";
+    snakeX += speedX * blockSize;
+    snakeY += speedY * blockSize;
+    context.fillRect(snakeX, snakeY, blockSize, blockSize);
     for (let i = 0; i < snakeBody.length; i++) {
         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+    }
+
+    if (snakeX < 0
+        || snakeX > total_col * blockSize
+        || snakeY < 0
+        || snakeY > total_row * blockSize) {
+
+        showGameOverModal()
+        setTimeout(resetGame, 2000);
+    }
+
+    for (let i = 0; i < snakeBody.length; i++) {
+        if (snakeX === snakeBody[i][0] && snakeY === snakeBody[i][1]) {
+            showGameOverModal()
+            setTimeout(resetGame, 2000);
+        }
     }
 }
 
@@ -78,4 +94,24 @@ function changeDirection(e) {
         speedX = 1;
         speedY = 0;
     }
+}
+
+function showGameOverModal() {
+    gameOver = true;
+    let modal = document.getElementById("gameOverModal");
+    modal.style.display = "block";
+    setTimeout(() => {
+        modal.style.display = "none";
+        resetGame();
+    }, 2000);
+}
+
+function resetGame() {
+    snakeX = blockSize * 5;
+    snakeY = blockSize * 5;
+    speedX = 0;
+    speedY = 0;
+    snakeBody = [];
+    placeFood();
+    gameOver = false;
 }

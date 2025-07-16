@@ -8,7 +8,21 @@
 <body>
 <h1>Snake Game with JS</h1>
 <canvas id="board"></canvas>
-
+<div id="gameOverModal" style="
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    color: red;
+    font-size: 2em;
+    padding: 20px 40px;
+    border-radius: 10px;
+    display: none;
+    z-index: 9999;
+">
+    Game Over
+</div>
 <script src="script.js"></script>
 </body>
 </html>
